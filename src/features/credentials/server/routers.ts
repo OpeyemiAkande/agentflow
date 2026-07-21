@@ -10,7 +10,7 @@ import {CredentialType} from "@/generated/prisma";
 import {encrypt} from "@/lib/encryption";
 
 export const credentialsRouter = createTRPCRouter({
-  create: protectedProcedure // restore premium later
+  create: premiumProcedure
     .input(
       z.object({
         name: z.string().min(1, "Name is required"),

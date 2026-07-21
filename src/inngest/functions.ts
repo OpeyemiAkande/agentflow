@@ -47,8 +47,6 @@ export const executeWorkflow = inngest.createFunction(
   async ({event, step, publish}) => {
     const inngestEventId = event.id;
     const workflowId = event.data.workflowId;
-    console.log("InngestEventID: ", inngestEventId);
-    console.log("workdlowId: ", workflowId);
 
     if (!inngestEventId || !workflowId) {
       throw new NonRetriableError("Event ID or workflow ID is missing");

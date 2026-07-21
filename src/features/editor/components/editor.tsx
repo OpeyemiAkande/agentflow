@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useCallback, useMemo } from 'react';
-import { 
-  ReactFlow, 
-  applyNodeChanges, 
-  applyEdgeChanges, 
+import {useState, useCallback, useMemo} from "react";
+import {
+  ReactFlow,
+  applyNodeChanges,
+  applyEdgeChanges,
   addEdge,
   type Node,
   type Edge,
@@ -14,18 +14,18 @@ import {
   Background,
   Controls,
   MiniMap,
-  Panel,
-} from '@xyflow/react';
-import { ErrorView, LoadingView } from "@/components/entity-components";
-import { useSuspenseWorkflow } from "@/features/workflows/hooks/use-workflows";
+  Panel
+} from "@xyflow/react";
+import {ErrorView, LoadingView} from "@/components/entity-components";
+import {useSuspenseWorkflow} from "@/features/workflows/hooks/use-workflows";
 
-import '@xyflow/react/dist/style.css';
-import { nodeComponents } from '@/config/node-components';
-import { AddNodeButton } from './add-node-button';
-import { useSetAtom } from 'jotai';
-import { editorAtom } from '../store/atoms';
-import { NodeType } from '@/generated/prisma';
-import { ExecuteWorkflowButton } from './execute-workflow-button';
+import "@xyflow/react/dist/style.css";
+import {nodeComponents} from "@/config/node-components";
+import {AddNodeButton} from "./add-node-button";
+import {useSetAtom} from "jotai";
+import {editorAtom} from "../store/atoms";
+import {NodeType} from "@/generated/prisma";
+import {ExecuteWorkflowButton} from "./execute-workflow-button";
 
 export const EditorLoading = () => {
   return <LoadingView message="Loading editor..." />;
@@ -35,10 +35,8 @@ export const EditorError = () => {
   return <ErrorView message="Error loading editor" />;
 };
 
-export const Editor = ({ workflowId }: { workflowId: string }) => {
-  const { 
-    data: workflow
-  } = useSuspenseWorkflow(workflowId);
+export const Editor = ({workflowId}: {workflowId: string}) => {
+  const {data: workflow} = useSuspenseWorkflow(workflowId);
 
   const setEditor = useSetAtom(editorAtom);
 
@@ -46,16 +44,19 @@ export const Editor = ({ workflowId }: { workflowId: string }) => {
   const [edges, setEdges] = useState<Edge[]>(workflow.edges);
 
   const onNodesChange = useCallback(
-    (changes: NodeChange[]) => setNodes((nodesSnapshot) => applyNodeChanges(changes, nodesSnapshot)),
-    [],
+    (changes: NodeChange[]) =>
+      setNodes((nodesSnapshot) => applyNodeChanges(changes, nodesSnapshot)),
+    []
   );
   const onEdgesChange = useCallback(
-    (changes: EdgeChange[]) => setEdges((edgesSnapshot) => applyEdgeChanges(changes, edgesSnapshot)),
-    [],
+    (changes: EdgeChange[]) =>
+      setEdges((edgesSnapshot) => applyEdgeChanges(changes, edgesSnapshot)),
+    []
   );
   const onConnect = useCallback(
-    (params: Connection) => setEdges((edgesSnapshot) => addEdge(params, edgesSnapshot)),
-    [],
+    (params: Connection) =>
+      setEdges((edgesSnapshot) => addEdge(params, edgesSnapshot)),
+    []
   );
 
   const hasManualTrigger = useMemo(() => {
@@ -63,7 +64,7 @@ export const Editor = ({ workflowId }: { workflowId: string }) => {
   }, [nodes]);
 
   return (
-    <div className='size-full'>
+    <div className="size-full">
       <ReactFlow
         nodes={nodes}
         edges={edges}

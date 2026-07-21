@@ -60,12 +60,12 @@ export const AppSidebar = () => {
           <SidebarMenuButton asChild className="gap-x-4 h-10 px-4">
             <Link href="/" prefetch>
               <Image
-                src="/logos/logo.svg"
-                alt="Nodebase"
+                src="/logos/agent-flow-logo.svg"
+                alt="AgentFlow"
                 width={30}
                 height={30}
               />
-              <span className="font-semibold text-sm">Nodebase</span>
+              <span className="font-semibold text-sm">AgentFlow</span>
             </Link>
           </SidebarMenuButton>
         </SidebarMenuItem>
