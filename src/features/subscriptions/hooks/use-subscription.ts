@@ -7,7 +7,7 @@ export const useSubscription = () => {
     queryFn: async () => {
       const {data} = await authClient.customer.state();
       return data;
-    }
+    },
   });
 };
 
@@ -18,10 +18,12 @@ export const useHasActiveSubscription = () => {
     customerState?.activeSubscriptions &&
     customerState.activeSubscriptions.length > 0;
 
+  // Some text
+
   return {
     hasActiveSubscription,
     subscription: customerState?.activeSubscriptions?.[0],
     isLoading,
-    ...rest
+    ...rest,
   };
 };
