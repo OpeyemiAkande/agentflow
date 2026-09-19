@@ -11,7 +11,7 @@ export const AuthLayout = ({children}: {children: React.ReactNode}) => {
         >
           <Image
             src="/logos/agent-flow-logo.svg"
-            alt="Nodebase"
+            alt="AgentFlow"
             width={30}
             height={30}
           />
