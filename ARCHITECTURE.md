@@ -7,20 +7,20 @@ endpoints, and chat webhooks as configured, and streams live status back to the 
 
 ## Tech stack
 
-| Layer | Choice |
-|---|---|
-| Framework | Next.js 16 (App Router), React 19 |
-| API layer | tRPC 11 (`@trpc/server`, `@trpc/tanstack-react-query`) |
-| Database | PostgreSQL via Prisma 6 |
-| Auth | better-auth (email/password + GitHub/Google OAuth) |
-| Billing | Polar, via `@polar-sh/better-auth` plugin |
-| Background jobs / workflow engine | Inngest (durable steps + Realtime channels) |
-| Canvas / graph UI | `@xyflow/react` |
-| AI providers | Vercel AI SDK — `@ai-sdk/anthropic`, `@ai-sdk/openai`, `@ai-sdk/google` |
-| UI kit | Tailwind v4, shadcn/radix primitives |
-| Templating | Handlebars (node prompt/body/endpoint templating) |
-| Observability | Sentry (client, server, edge) |
-| Lint/format | Biome |
+| Layer                             | Choice                                                                  |
+| --------------------------------- | ----------------------------------------------------------------------- |
+| Framework                         | Next.js 16 (App Router), React 19                                       |
+| API layer                         | tRPC 11 (`@trpc/server`, `@trpc/tanstack-react-query`)                  |
+| Database                          | PostgreSQL via Prisma 6                                                 |
+| Auth                              | better-auth (email/password + GitHub/Google OAuth)                      |
+| Billing                           | Polar, via `@polar-sh/better-auth` plugin                               |
+| Background jobs / workflow engine | Inngest (durable steps + Realtime channels)                             |
+| Canvas / graph UI                 | `@xyflow/react`                                                         |
+| AI providers                      | Vercel AI SDK — `@ai-sdk/anthropic`, `@ai-sdk/openai`, `@ai-sdk/google` |
+| UI kit                            | Tailwind v4, shadcn/radix primitives                                    |
+| Templating                        | Handlebars (node prompt/body/endpoint templating)                       |
+| Observability                     | Sentry (client, server, edge)                                           |
+| Lint/format                       | Biome                                                                   |
 
 There is currently no test framework configured (no unit, integration, or e2e coverage).
 
@@ -124,33 +124,3 @@ topologically-sorted sequence.
   a `cryptr` wrapper over `ENCRYPTION_KEY`) only at call time, and never persisted in
   plaintext. Discord/Slack webhook URLs, by contrast, are stored as plain JSON on `Node.data`
   rather than through the encrypted `Credential` path.
-
-## Operational notes
-
-- Sentry is wired across client/server/edge runtimes; the wizard-scaffolded
-  `/sentry-example-page` and `/api/sentry-example-api` are still present and routable.
-- No CSP or other security headers are configured in `next.config.ts`, and there is no
-  rate limiting anywhere in the API surface.
-- The Stripe and Google Form webhook routes accept any POST carrying a `workflowId` and
-  execute immediately — the Stripe route does not verify the `stripe-signature` header,
-  and the Google Form route has no shared secret.
-- The HTTP Request node fetches a fully template-controlled URL server-side with no
-  allow/deny list, which combined with the open webhook triggers above is an SSRF
-  path worth closing before this is exposed to untrusted input.
-
-## Known gaps / suggested next steps
-
-1. Add Stripe webhook signature verification and a per-workflow secret for the Google
-   Form trigger.
-2. Restrict or validate destination URLs in the HTTP Request (and Discord/Slack) nodes to
-   mitigate SSRF.
-3. Move Discord/Slack webhook URLs into the encrypted `Credential` model for consistency
-   with AI provider secrets.
-4. Drop the `select`-less credential queries that return ciphertext to the client, or add
-   `select`/`omit` to only return what the UI needs.
-5. Remove the vestigial `createTRPCContext` stub (`userId: "user_123"`) in
-   `src/trpc/init.ts` — it's unused and only real `protectedProcedure`/session checks
-   are load-bearing.
-6. Extract the duplicated publish/status/error boilerplate and repeated Handlebars
-   `json` helper registration shared by the six node executors into one helper.
-7. Add test coverage — there is currently none.
